@@ -3,38 +3,42 @@ from typing import List
 from collections import defaultdict, Counter
 from functools import reduce
 import os
-import json
+import pickle
 
 class WordleSolver:
 
-    def __init__(self, guess_file: str, answer_file="", method=""):
+    def __init__(self, guess_file: str, answer_file="", method="average"):
         g_file = os.path.splitext(os.path.split(guess_file)[-1])[0]
         a_file = os.path.splitext(os.path.split(answer_file)[-1])[0]
-        self._save_file = os.path.join('', 'feedbacks', f"{a_file}__{g_file}.json")
+        self._save_file = os.path.join('', 'cache', f"{a_file}__{g_file}.pkl")
         self._method = method  # either "average" or "worst"
         self._guess_words = self._load_words(guess_file)
         self._answer_words = self._load_words(answer_file) if answer_file != "" else [w for w in self._guess_words]
-        self._answers_remaining = enumerate(self._answer_words)  # mutable -> filtered as guesses are made
+        self._answers_remaining = [_ for _ in enumerate(self._answer_words)]  # mutable -> filtered as guesses are made
         self._guesses_made = []  # mutable -> the guesses that were made -> tuple of (index: int, word: str)
         self._feedbacks_given = []  # mutable -> the feedbacks given on those guesses -> str
         try:
-            with open(self._save_file, 'r') as infile:
-                print("Loading the feedbacks JSON file...")
-                self._feedbacks = json.load(infile)
+            with open(self._save_file, 'rb') as infile:
+                print("Loading the cache file...")
+                self._feedbacks = pickle.load(infile)
         except FileNotFoundError:
-            print("Creating the feedbacks JSON file...")
+            print("Creating the cache file. Please wait...")
             os.makedirs(os.path.dirname(self._save_file), exist_ok=True)
             self._feedbacks = self._populate_feedbacks()
-            with open(self._save_file, 'w') as outfile:
-                json.dump(self._feedbacks, outfile)
-        except json.decoder.JSONDecodeError:
-            print("There was an error processing the feedbacks JSON file. Recreating it...")
+            with open(self._save_file, 'wb') as outfile:
+                pickle.dump(self._feedbacks, outfile)
+        if len(self._feedbacks[0]) != len(self._answer_words) or len(self._feedbacks) != len(self._guess_words):
+            print("Cache file does not match the dictionary. Recreating it...")
             self._feedbacks = self._populate_feedbacks()
-            with open(self._save_file, 'w') as outfile:
-                json.dump(self._feedbacks, outfile)
+            with open(self._save_file, 'wb') as outfile:
+                pickle.dump(self._feedbacks, outfile)
+        print("Set-up complete.")
 
     def reset_game(self):
-        self._answers_remaining = enumerate(self._answer_words)
+        """
+        Reset the game state to a new state
+        """
+        self._answers_remaining = [_ for _ in enumerate(self._answer_words)]
         self._guesses_made = []
         self._feedbacks_given = []
 
@@ -42,15 +46,15 @@ class WordleSolver:
         """
         Returns the optimal guess word, based on the game state and feedback given so far
         """
-        # base case - if there is only one possible answer left, that is the correct solution
-        if type(self._answers_remaining) == list and len(self._answers_remaining) == 1:
+        # base case - if there are only 1 or 2 possible answer left, try one of those
+        if 1 <= self.get_potential_answers_length() <= 2:
             j, guess = self._answers_remaining[0]
             i = self._get_word_index(guess, "guesses")
         # # optimization - if this is the first guess, go with the pre-calculated best guess
         elif len(self._guesses_made) == 0 and self._method == "average":
-            i, guess = 7642, "roate"
+            i, guess = self._get_word_index("roate", "guesses"), "roate"
         elif len(self._guesses_made) == 0 and self._method == "worst":
-            i, guess = 113, "aesir"
+            i, guess = self._get_word_index("aesir", "guesses"), "aesir"
         # otherwise, calculate the best guess based on current game state
         else:
             i, guess = self._calculate_optimal_guess()
@@ -88,9 +92,12 @@ class WordleSolver:
         :param guess: the guess that was made; if empty, assumes the guess was the previously given optimal guess
         """
         self._feedbacks_given.append(feedback)
-        if guess != "":  # TODO - ensure this method is only called after a get_optimal_guess call
+        if guess != "":
             i = self._get_word_index(guess, "guesses")
-            self._guesses_made[-1] = (i, guess)
+            if len(self._guesses_made) == 0:
+                self._guesses_made.append((i, guess))
+            else:
+                self._guesses_made[-1] = (i, guess)
         else:
             i, guess = self._guesses_made[-1]  # e.g. 'raise'
         # filter the word list (and its associated bitvectors) based on the feedback
@@ -105,7 +112,7 @@ class WordleSolver:
         """
         Returns the length of possible answers remaining, based on guesses made / feedback given so far
         """
-        return len(self._answer_words)
+        return len(self._answers_remaining)
 
     def _populate_feedbacks(self) -> List[List[str]]:
         # feedbacks is a matrix of guess_words (rows) x answer_words (cols)
@@ -118,10 +125,14 @@ class WordleSolver:
         return feedbacks
 
     def _get_word_index(self, word, dictionary):
+        index = -1
         if dictionary == 'guesses':
-            return binary_search(self._guess_words, word)
+            index = binary_search(self._guess_words, word)
         elif dictionary == 'answers':
-            return binary_search(self._answer_words, word)
+            index = binary_search(self._answer_words, word)
+        if index == -1:
+            raise Exception(f"Word: {word} was not found in the {dictionary} dictionary.")
+        return index
 
     @staticmethod
     def _calculate_feedback(answer, guess, answer_letter_counts=None):
@@ -164,16 +175,3 @@ def binary_search(arr, target):
         else:
             right = mid - 1
     return -1
-
-
-if __name__ == '__main__':
-    w = WordleSolver("dictionaries/wordle-allowed.txt", "dictionaries/wordle-answers.txt", method="average")
-    guess1 = w.get_optimal_guess()
-    print(guess1)
-    w.update_with_guess_feedback("BYBBB")
-    guess2 = w.get_optimal_guess()
-    print(guess2)
-    w.update_with_guess_feedback("BGGBG")
-    print(w._answers_remaining)
-    guess3 = w.get_optimal_guess()
-    print(guess3)

@@ -21,7 +21,7 @@ def run_trial(w: WordleSolver, answer: str) -> int:
 
 
 if __name__ == '__main__':
-    w = WordleSolver("dictionaries/wordle-allowed.txt", "dictionaries/wordle-answers.txt", method="worst")
+    w = WordleSolver("dictionaries/wordle-allowed.txt", "dictionaries/wordle-answers.txt", method="average")
     words = WordleSolver._load_words("dictionaries/wordle-answers.txt")
     guess_counts = []
     above_6 = []
