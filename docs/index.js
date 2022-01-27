@@ -21,7 +21,7 @@ class WordleSolver {
     }
 
     getGuess() {
-        const [guess, next] = this.#curr[this.#lastFeedback] ?? [null, null];
+        const [guess, next] = this.#curr[this.#lastFeedback] ?? [null, this.#next];
         this.#next = next;
         return guess;
     }
