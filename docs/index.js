@@ -74,7 +74,7 @@ class WordleSolverPage {
     }
 
     #hideShowFeedbackForm(shouldHide) {
-        this.#formDOM.style.display = shouldHide ? "none" : "block";
+        this.#formDOM.style.display = shouldHide ? "none" : "flex";
     }
 
     #displayGameWon() {
@@ -113,7 +113,7 @@ class WordleSolverPage {
             return
         }
         if(this.solver.next_guess_is_winner()) {
-            this.#updateGuessHeader("Congratulations! The next guess will be the winner!");
+            this.#updateGuessHeader("Here's the next guess. Congratulations - will be the winner!");
         } else {
             this.#updateGuessHeader("The optimal next guess is:");
         }

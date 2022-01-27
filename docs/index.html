@@ -5,20 +5,27 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+    <title>Wordle Solver</title>
 </head>
 <body>
     <h1>Wordle Solver</h1>
-    <h4><a href="https://www.jbaird.dev">By Jon Baird</a></h4>
+    <h3>By Jon Baird | 🔗 <a href="https://www.jbaird.dev">Website</a></h3>
     <p id="guess-header"></p>
     <pre id="guess">ROATE</pre>
     <form id="feedback-form">
-        <label for="feedback">Input the feedback: </label>
-        <input id="feedback" type="text" />
-        <button id="submit" type="submit">Submit</button>
+        <label for="feedback">Input the game's feedback: </label>
+        <input class="form-inputs" id="feedback" type="text" />
+        <button class="btn" id="submit" type="submit">Submit</button>
         <p id="feedback-explainer">The feedback should be a string like GYYBB, where G = Green, Y = Yellow, B = Black (Grey)</p>
     </form>
-    <button id="reset-game">Reset Game</button>
+    <button class="btn" id="reset-game">Reset Game</button>
+    <footer>
+        <p>© <span id="copyright-year"></span> Jonathan Baird</p>
+    </footer>
     <script src="index.js"></script>
 </body>
+<script>
+    document.getElementById("copyright-year").innerText = new Date().getFullYear();
+</script>
 </html>
