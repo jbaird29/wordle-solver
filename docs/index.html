@@ -15,7 +15,8 @@
     <pre id="guess">ROATE</pre>
     <form id="feedback-form">
         <label for="feedback">Input the game's feedback: </label>
-        <input class="form-inputs" id="feedback" type="text" autocapitalize="characters" oninput="this.value = this.value.toUpperCase()" />
+        <input class="form-inputs" id="feedback" type="text" autocomplete="off" aria-autocomplete="none"
+               autocapitalize="characters" spellcheck="false" oninput="this.value = this.value.toUpperCase()" />
         <button class="btn" id="submit" type="submit">Submit</button>
         <p id="feedback-explainer">The feedback should be a string like GYYBB, where G = Green, Y = Yellow, B = Black (Grey)</p>
     </form>
