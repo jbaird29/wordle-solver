@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Wordle Solver</h1>
+    <h4><a href="https://www.jbaird.dev">By Jon Baird</a></h4>
+    <p id="guess-header"></p>
+    <pre id="guess">ROATE</pre>
+    <form id="feedback-form">
+        <label for="feedback">Input the feedback: </label>
+        <input id="feedback" type="text" />
+        <button id="submit" type="submit">Submit</button>
+        <p id="feedback-explainer">The feedback should be a string like GYYBB, where G = Green, Y = Yellow, B = Black (Grey)</p>
+    </form>
+    <button id="reset-game">Reset Game</button>
+    <script src="index.js"></script>
+</body>
+</html>
