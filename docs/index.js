@@ -134,7 +134,7 @@ class WordleSolverPage {
 
 // Loads the decision tree JSON
 const loadJSON = async () => {
-    const response = await fetch("../cache/wordle-answers__wordle-allowed__solutions.json");
+    const response = await fetch("decision_tree_cache.json");
     return await response.json()
 }
 
