@@ -14,13 +14,61 @@
     <p id="guess-header"></p>
     <pre id="guess">ROATE</pre>
     <form id="feedback-form">
-        <label for="feedback">Input the game's feedback: </label>
-        <input class="form-inputs" id="feedback" type="text" autocomplete="off" aria-autocomplete="none"
-               autocorrect="off" autocapitalize="characters" spellcheck="false"
-               oninput="this.value = this.value.toUpperCase()" />
+        <p>Input the game's feedback: </p>
+
+        <div class="form-radios">
+
+            <div class="form-radio-group">
+                <input type="radio" id="box-0-G" name="box-0" value="G">
+                <label class="box-emoji" for="box-0-G">🟩</label><br>
+                <input type="radio" id="box-0-Y" name="box-0" value="Y">
+                <label class="box-emoji" for="box-0-Y">🟨</label><br>
+                <input type="radio" id="box-0-B" name="box-0" value="B">
+                <label class="box-emoji" for="box-0-B">⬜</label><br>
+            </div>
+
+            <div class="form-radio-group">
+                <input type="radio" id="box-1-G" name="box-1" value="G">
+                <label class="box-emoji" for="box-1-G">🟩</label><br>
+                <input type="radio" id="box-1-Y" name="box-1" value="Y">
+                <label class="box-emoji" for="box-1-Y">🟨</label><br>
+                <input type="radio" id="box-1-B" name="box-1" value="B">
+                <label class="box-emoji" for="box-1-B">⬜</label><br>
+            </div>
+
+            <div class="form-radio-group">
+                <input type="radio" id="box-2-G" name="box-2" value="G">
+                <label class="box-emoji" for="box-2-G">🟩</label><br>
+                <input type="radio" id="box-2-Y" name="box-2" value="Y">
+                <label class="box-emoji" for="box-2-Y">🟨</label><br>
+                <input type="radio" id="box-2-B" name="box-2" value="B">
+                <label class="box-emoji" for="box-2-B">⬜</label><br>
+            </div>
+
+            <div class="form-radio-group">
+                <input type="radio" id="box-3-G" name="box-3" value="G">
+                <label class="box-emoji" for="box-3-G">🟩</label><br>
+                <input type="radio" id="box-3-Y" name="box-3" value="Y">
+                <label class="box-emoji" for="box-3-Y">🟨</label><br>
+                <input type="radio" id="box-3-B" name="box-3" value="B">
+                <label class="box-emoji" for="box-3-B">⬜</label><br>
+            </div>
+
+            <div class="form-radio-group">
+                <input type="radio" id="box-4-G" name="box-4" value="G">
+                <label class="box-emoji" for="box-4-G">🟩</label><br>
+                <input type="radio" id="box-4-Y" name="box-4" value="Y">
+                <label class="box-emoji" for="box-4-Y">🟨</label><br>
+                <input type="radio" id="box-4-B" name="box-4" value="B">
+                <label class="box-emoji" for="box-4-B">⬜</label><br>
+            </div>
+
+        </div>
+
         <button class="btn" id="submit" type="submit">Submit</button>
-        <p id="feedback-explainer">The feedback should be a string like GYYBB, where G = Green, Y = Yellow, B = Black (Grey)</p>
     </form>
+    <br>
+    <br>
     <button class="btn" id="reset-game">Reset Game</button>
     <footer>
         <p>© <span id="copyright-year"></span> Jonathan Baird</p>

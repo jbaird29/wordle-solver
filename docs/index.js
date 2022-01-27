@@ -1,15 +1,3 @@
-// Helper method; returns true if the feedback is valid, 5-letter sequence; else false
-const isValidFeedback = (feedback) => {
-    if(feedback.length !== 5) return false;
-    for (let c of feedback) {
-        if (c !== 'G' && c !== 'Y' && c !== 'B') {
-            return false;
-        }
-    }
-    return true;
-}
-
-
 // The interface for solving the game; methods to traverse decision tree & return next guess
 class WordleSolver {
     #tree; #curr; #next; #lastFeedback
@@ -47,13 +35,12 @@ class WordleSolver {
 
 // The interface to update the DOM based on user actions
 class WordleSolverPage {
-    #guessDOM; #formDOM; #submitDOM; #feedbackDOM; #guessHeaderDOM; #resetBtnDOM
+    #guessDOM; #formDOM; #submitDOM; #guessHeaderDOM; #resetBtnDOM
     constructor(decisionTree) {
         this.solver = new WordleSolver(decisionTree)
         this.#guessDOM = document.getElementById("guess");
         this.#guessHeaderDOM = document.getElementById("guess-header")
         this.#submitDOM = document.getElementById("submit");
-        this.#feedbackDOM = document.getElementById("feedback");
         this.#formDOM = document.getElementById("feedback-form");
         this.#resetBtnDOM = document.getElementById("reset-game");
         this.#updateGuess(this.solver.getGuess())  // display the starting word as the first guess
@@ -69,10 +56,6 @@ class WordleSolverPage {
         this.#guessDOM.innerText = guess
     }
 
-    #clearFeedback() {
-        this.#feedbackDOM.value = ""
-    }
-
     #hideShowFeedbackForm(shouldHide) {
         this.#formDOM.style.display = shouldHide ? "none" : "flex";
     }
@@ -80,7 +63,7 @@ class WordleSolverPage {
     #displayGameWon() {
         this.#updateGuessHeader("Congratulations! We've won the game!");
         this.#updateGuess("");
-        this.#clearFeedback();
+        this.#formDOM.reset()
         this.#hideShowFeedbackForm(true);
     }
 
@@ -91,11 +74,10 @@ class WordleSolverPage {
 
     #feedbackUpdateEventListener(event) {
         event.preventDefault()
-        const feedback = this.#feedbackDOM.value
-        // Ensure feedback was entered validly
-        if(!isValidFeedback(feedback)) {
-            this.#updateGuessHeader("Error: feedback was entered incorrectly.");
-            this.#clearFeedback()
+        const feedback = [...new FormData(this.#formDOM).values()].join('')
+        // Ensure form validity
+        if(feedback.length !== 5) {
+            this.#updateGuessHeader("Error: Ensure all boxes are selected.");
             return
         }
         // Check for game won condition
@@ -109,7 +91,7 @@ class WordleSolverPage {
         if(guess === null) {
             this.#updateGuessHeader("Error: we've reached an invalid state. You must've " +
                 "entered feedback incorrectly. Try re-inputting it or resetting the game.");
-            this.#clearFeedback();
+            this.#formDOM.reset()
             return
         }
         if(this.solver.next_guess_is_winner()) {
@@ -118,7 +100,7 @@ class WordleSolverPage {
             this.#updateGuessHeader("The optimal next guess is:");
         }
         this.#updateGuess(guess)  // display the starting word as the first guess
-        this.#clearFeedback()
+        this.#formDOM.reset()
     }
 
     #resetGameEventListener(event) {
@@ -126,7 +108,7 @@ class WordleSolverPage {
         this.solver.resetGame();
         this.#updateGuess(this.solver.getGuess());
         this.#hideShowFeedbackForm(false);
-        this.#clearFeedback();
+        this.#formDOM.reset()
         this.#updateGuessHeader("The optimal next guess is:");
     }
 }
