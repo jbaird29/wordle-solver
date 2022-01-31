@@ -44,8 +44,12 @@ class WordleSolver:
         """Returns the optimal guess word, based on the game state and feedback given so far"""
         if 1 <= len(self.get_potential_answers()) <= 2:
             guess = self._potential_answers[0]  # base case - if there are only 1 or 2 possible answer left, try one
-        elif len(self._guesses_made) == 0:
+        elif len(self._guesses_made) == 0 and self._cache.get_guess_filename() == 'wordle-allowed' \
+                and self._cache.get_answer_filename() == 'wordle-answers':
             guess = "roate"  # optimization - if this is the first guess, go with the pre-calculated best guess
+        elif len(self._guesses_made) == 0 and self._cache.get_guess_filename() == 'wordle-answers' \
+                and self._cache.get_answer_filename() == 'wordle-answers':
+            guess = "raise"  # optimization - if this is the first guess, go with the pre-calculated best guess
         else:
             guess = self._calculate_optimal_guess()  # otherwise, calculate the best guess based on current game state
         self._guesses_made.append(guess)

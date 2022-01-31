@@ -115,14 +115,14 @@ class WordleSolverPage {
 
 
 // Loads the decision tree JSON
-const loadJSON = async () => {
-    const response = await fetch("decision_tree_cache.json");
+const loadJSON = async (filename) => {
+    const response = await fetch(filename);
     return await response.json()
 }
 
 
 const main = async () => {
-    const decisionTree = await loadJSON()
+    const decisionTree = await loadJSON("decision_tree_cache_small.json")
     new WordleSolverPage(decisionTree)
 }
 

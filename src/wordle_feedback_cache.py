@@ -13,9 +13,10 @@ class WordleFeedbackCache:
         :param answer_file: the filepath as .txt holding the list of possible hidden answers
         """
         print("Creating feedbacks cache. Please wait...")
-        answer_file = answer_file if answer_file != "" else guess_file
-        self._guess_words = self.load_words(guess_file)
-        self._answer_words = self.load_words(answer_file)
+        self._guess_file = guess_file
+        self._answer_file = answer_file if answer_file != "" else guess_file
+        self._guess_words = self.load_words(self._guess_file)
+        self._answer_words = self.load_words(self._answer_file)
         self._feedbacks = self._create_feedbacks_cache(self._answer_words, self._guess_words)
         print("Feedbacks cache created.")
 
@@ -35,6 +36,12 @@ class WordleFeedbackCache:
     def get_guess_words(self) -> List[str]:
         """Returns list of possible guessable words"""
         return self._guess_words
+
+    def get_guess_filename(self) -> str:
+        return os.path.splitext(os.path.split(self._guess_file)[-1])[0]
+
+    def get_answer_filename(self) -> str:
+        return os.path.splitext(os.path.split(self._answer_file)[-1])[0]
 
     @staticmethod
     def _create_feedbacks_cache(answers, guesses) -> dict:

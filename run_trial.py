@@ -1,4 +1,6 @@
-from src.wordle_solver import Wordle, WordleSolverInterface, WordleFeedbackCache
+from src.wordle_solver_interface import WordleSolverInterface
+from src.wordle import Wordle
+from src.wordle_feedback_cache import WordleFeedbackCache
 from statistics import mean, quantiles
 
 
