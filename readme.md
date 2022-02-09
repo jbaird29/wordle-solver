@@ -1,6 +1,6 @@
 # WordleSolver
 
-A wordle solver algorithm & associated program I designed and implemented in Python.
+A near-optimal wordle solver algorithm & associated program I designed and implemented in Python.
 
 Given game state, presents the user with the optimal next guess, which is the guess that has the fewest 
 possible remaining solutions (on average) after making that guess.
